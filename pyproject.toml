@@ -1,0 +1,20 @@
+[project]
+name = "imosprom-core"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "lenny",email = "your_email@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "sqlalchemy (>=2.0.44,<3.0.0)",
+    "fastapi (>=0.119.0,<0.120.0)",
+    "dishka (>=1.7.2,<2.0.0)",
+    "alembic (>=1.17.0,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
