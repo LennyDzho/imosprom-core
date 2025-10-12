@@ -9,11 +9,78 @@
 * **Пользователь** (`role=user`): создаёт диалоги/сообщения, получает ответы.
 * **Оператор** (`role=operator`): принимает эскалации, отвечает пользователям.
 * **Админ** (`role=admin`) (опц.): доступ к настройкам/логам.
-* Auth: JWT (Bearer) или session cookies; CORS; CSRF для web; RBAC по ролям.
-
+* Auth: JWT (Bearer) или session cookies; CORS; CSRF для web; RBAC по ролям. (должна быть реализация и JWT, и Cookie-сессий).
 ## Интерфейсы (REST)
 
+### Регистрация и авторизация пользователя.
+
+Тело:
+```json
+{ 
+  "email":"user@example.com",
+  "password":"P@ssw0rd!",
+  "display_name":"Mik"
+}
+```
+
+Ответ (JWT-вариант):
+```json
+{
+  "user_id":"uuid",
+  "email":"user@example.com",
+  "role":"user", "access":"<jwt>",
+  "refresh":"<jwt>"
+}
+```
+
+Ответ (Cookie-сессии):
+
+Set-Cookie: sid=<session_id>; HttpOnly; Secure; SameSite=Strict
+
+Тело:
+```json
+{ 
+  "user_id":"uuid",
+  "email":"user@example.com",
+  "role":"user",
+  "csrf":"<csrf-token>"
+}  
+```
+
+#### POST /api/v1/auth/login
+
+Логин по email+паролю.
+
+Тело: `{ "email":"...", "password":"..." }`
+
+Ответ: аналогично /register.
+
+При успехе:
+- создаём session_id, кладём в Redis sess:{session_id}, возвращаем JWT или ставим cookie + csrf.
+
+#### POST /api/v1/auth/logout
+
+Инвалидирует текущую сессию:
+
+- Cookie: удаляет sess:{session_id} в Redis и ставит Set-Cookie: sid=; Max-Age=0.
+
+#### POST /api/v1/auth/refresh (если используем Refresh/JWT)
+
+- `Тело: { "refresh":"<jwt>" }` или берём из cookie.
+
+- Выдаём новый access, (опц.) ротируем refresh.
+
+- Проверить ротацию/ревокацию (Redis rt:*).
+
+### GET /api/v1/auth/me
+
+Возвращает профиль текущего пользователя по Access/сессии.
+
+---
+
 ### Пользовательский чат
+
+Все эндпоинты требуют аутентификацию!!!
 
 * `POST /api/v1/dialogs` → `{dialog_id}` — создать диалог.
 * `POST /api/v1/dialogs/{dialog_id}/messages` → отправить сообщение пользователя.
