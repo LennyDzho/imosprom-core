@@ -47,3 +47,27 @@ class InactiveUser(AppException):
 
 class Conflict(AppException):
     """Конфликт данных"""
+
+class AppException(Exception):
+    """Базовое исключение приложения"""
+    pass
+
+class UserAlreadyExists(AppException):
+    def __init__(self, message="Пользователь с таким email уже существует"):
+        self.message = message
+        super().__init__(self.message)
+
+class InvalidCredentials(AppException):
+    def __init__(self, message="Неверные учетные данные"):
+        self.message = message
+        super().__init__(self.message)
+
+class InvalidToken(AppException):
+    def __init__(self, message="Невалидный токен"):
+        self.message = message
+        super().__init__(self.message)
+
+class UserNotFound(AppException):
+    def __init__(self, message="Пользователь не найден"):
+        self.message = message
+        super().__init__(self.message)

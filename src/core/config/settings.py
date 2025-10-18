@@ -51,6 +51,19 @@ class Settings(BaseModel):
     redis: RedisConfig
     rabbitmq: RabbitMQConfig
 
+    # Auth settings
+    SECRET_KEY: str = "your-secret-key-change-in-production"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # CORS settings
+    CORS_ORIGINS: list = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
+    OPENROUTER_API_KEY: str = None
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    DEFAULT_MODEL: str = "google/gemini-2.0-flash-exp:free"
+    FALLBACK_MODEL: str = "google/gemini-2.0-flash-exp:free"
 
 def load_settings() -> Settings:
     env_path = BASE_DIR / ".env"
