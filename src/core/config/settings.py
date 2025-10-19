@@ -5,6 +5,7 @@ from environs import Env
 from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+print(BASE_DIR)
 
 class AppConfig(BaseModel):
     debug: bool

@@ -3,10 +3,11 @@ import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
+from src.database.models.auth import Operator
 from src.database.repositories.auth import UserRepository, UserSessionRepository, OperatorRepository
 from src.core.security import create_access_token, create_refresh_token, verify_token
 from src.core.config import settings
-from src.api.schemas.auth import UserCreate, UserLogin, TokenResponse, OperatorCreate
+from src.api.schemas import UserCreate, UserLogin, TokenResponse
 
 
 class AuthService:
